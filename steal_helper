@@ -35,7 +35,7 @@ x.TextSize=12
 local function y(z,A,B)local C=Instance.new("TextButton",w)C.Size=UDim2.new(0,140,0,35)C.Position=UDim2.new(0.5,-70,0,30+(A*40))C.BackgroundColor3=Color3.fromRGB(220,220,220)C.Text=B C.TextColor3=Color3.fromRGB(0,0,0)C.Font=Enum.Font.GothamBold C.TextSize=16 Instance.new("UICorner",C).CornerRadius=UDim.new(0,10) C.MouseButton1Click:Connect(function()z(C)end)return C end
 local D=y(function(E) t(E)end,0,"Boost OFF")
 y(function() local F=h(f) if F then n(F)end end,1,"Insta Lock")
-y(function() local F=h(g) if F then local G=d.Position;n(F);task.wait(0.3);n(G)end end,2,"Insta Steal")
+y(function() local F=h(g) if F then local G=d.Position;n(F);task.wait(0.2);n(G)end end,2,"Insta Steal")
 local function H(I)if I and I:IsA("ProximityPrompt")then I.HoldDuration=0 end end
 for _,J in pairs(workspace:GetDescendants())do H(J) end
 workspace.DescendantAdded:Connect(function(J)H(J) end)
