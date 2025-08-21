@@ -1,0 +1,12 @@
+-- Ofuscado "Hexa Hub On Top 💫"
+local ___=game["Players"]["LocalPlayer"]
+local _0=Vector3["new"](0,10,0)
+local _1=-10
+local function _a(_b)
+    local _c=_b:WaitForChild("HumanoidRootPart")
+    game:GetService("RunService")["Stepped"]:Connect(function()
+        if _c.Position.Y<_1 then _c.CFrame=CFrame["new"](_0) end
+    end)
+end
+if ___["Character"] then _a(___["Character"]) end
+___["CharacterAdded"]:Connect(_a)
