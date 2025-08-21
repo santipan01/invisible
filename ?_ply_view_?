@@ -1,0 +1,84 @@
+-- ESP 3D estable para Delta
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local ESPColor = Color3.fromRGB(255, 0, 0)
+
+-- Folder en CoreGui
+local folder = Instance.new("Folder", game.CoreGui)
+folder.Name = "ESP_System"
+
+local function createESP(p)
+    local function setupCharacter(c)
+        if not c:FindFirstChild("HumanoidRootPart") then
+            c:WaitForChild("HumanoidRootPart")
+        end
+        local hrp = c:WaitForChild("HumanoidRootPart")
+        
+        -- Highlight relleno + contorno
+        local highlight = Instance.new("Highlight")
+        highlight.Adornee = c
+        highlight.FillColor = ESPColor
+        highlight.FillTransparency = 0.3
+        highlight.OutlineColor = ESPColor
+        highlight.OutlineTransparency = 0
+        highlight.Parent = folder
+        
+        -- Billboard con nombre
+        local head = c:WaitForChild("Head")
+        local bb = Instance.new("BillboardGui")
+        bb.Adornee = head
+        bb.AlwaysOnTop = true
+        bb.Size = UDim2.new(0, 100, 0, 20)
+        bb.StudsOffset = Vector3.new(0, 3, 0)
+        bb.Parent = folder
+        
+        local tl = Instance.new("TextLabel")
+        tl.Size = UDim2.new(1,0,1,0)
+        tl.BackgroundTransparency = 1
+        tl.Text = p.Name
+        tl.TextColor3 = ESPColor
+        tl.TextScaled = true
+        tl.Font = Enum.Font.GothamBold
+        tl.Parent = bb
+        
+        -- Tracer
+        local line = Drawing.new("Line")
+        line.Color = ESPColor
+        line.Thickness = 2
+        line.Visible = true
+        
+        RunService.RenderStepped:Connect(function()
+            if c.Parent then
+                local pos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
+                if onScreen then
+                    line.Visible = true
+                    line.From = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y)
+                    line.To = Vector2.new(pos.X, pos.Y)
+                else
+                    line.Visible = false
+                end
+            end
+        end)
+    end
+    
+    if p.Character then
+        setupCharacter(p.Character)
+    end
+    p.CharacterAdded:Connect(setupCharacter)
+end
+
+-- Inicializar jugadores existentes
+for _, plr in pairs(Players:GetPlayers()) do
+    if plr ~= LocalPlayer then
+        createESP(plr)
+    end
+end
+
+-- Detectar nuevos jugadores
+Players.PlayerAdded:Connect(function(p)
+    if p ~= LocalPlayer then
+        createESP(p)
+    end
+end)
