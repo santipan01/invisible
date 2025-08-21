@@ -1,11 +1,11 @@
--- ESP 3D estable para Delta
+-- Ofuscado Hexa Gui On top
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 local ESPColor = Color3.fromRGB(255, 0, 0)
 
--- Folder en CoreGui
+-- 
 local folder = Instance.new("Folder", game.CoreGui)
 folder.Name = "ESP_System"
 
@@ -16,7 +16,7 @@ local function createESP(p)
         end
         local hrp = c:WaitForChild("HumanoidRootPart")
         
-        -- Highlight relleno + contorno
+        -- 
         local highlight = Instance.new("Highlight")
         highlight.Adornee = c
         highlight.FillColor = ESPColor
@@ -25,7 +25,7 @@ local function createESP(p)
         highlight.OutlineTransparency = 0
         highlight.Parent = folder
         
-        -- Billboard con nombre
+        -- 
         local head = c:WaitForChild("Head")
         local bb = Instance.new("BillboardGui")
         bb.Adornee = head
@@ -43,7 +43,7 @@ local function createESP(p)
         tl.Font = Enum.Font.GothamBold
         tl.Parent = bb
         
-        -- Tracer
+        -- 
         local line = Drawing.new("Line")
         line.Color = ESPColor
         line.Thickness = 2
@@ -69,14 +69,14 @@ local function createESP(p)
     p.CharacterAdded:Connect(setupCharacter)
 end
 
--- Inicializar jugadores existentes
+-- 
 for _, plr in pairs(Players:GetPlayers()) do
     if plr ~= LocalPlayer then
         createESP(plr)
     end
 end
 
--- Detectar nuevos jugadores
+-- 
 Players.PlayerAdded:Connect(function(p)
     if p ~= LocalPlayer then
         createESP(p)
