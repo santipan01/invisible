@@ -1,0 +1,204 @@
+pcall(function()
+    for _,_O in pairs({"\72exaMini","\72exaIntro"}) do
+        if game.CoreGui:FindFirstChild(_O) then
+            game.CoreGui[_O]:Destroy()
+        end
+    end
+end)
+
+local _T=game:GetService(string.char(84,119,101,101,110,83,101,114,118,105,99,101))
+local _P=game.Players.LocalPlayer
+
+local _G=Instance.new(string.char(83,99,114,101,101,110,71,117,105))
+_G.Name="\72exaIntro"
+_G.Parent=_P:WaitForChild("\80layerGui")
+_G.ResetOnSpawn=false
+
+local _B=Instance.new("\70rame")
+_B.Size=UDim2.new(0,(310),0,(170))
+_B.Position=UDim2.new(0.5,-155,0.5,-85)
+_B.BackgroundColor3=Color3.fromRGB(255,255,255)
+_B.BorderSizePixel=0
+_B.Parent=_G
+_B.Name="Bd"
+Instance.new("UICorner",_B).CornerRadius=UDim.new(0,(16))
+
+local _BG=Instance.new("UIGradient",_B)
+_BG.Color=ColorSequence.new{
+    ColorSequenceKeypoint.new(0,Color3.fromRGB(200,200,200)),
+    ColorSequenceKeypoint.new(1,Color3.fromRGB(255,255,255))
+}
+
+task.spawn(function()
+    while _G.Parent do
+        for _i=0,360,5 do
+            _BG.Rotation=_i
+            task.wait(0.01)
+        end
+    end
+end)
+
+local _F=Instance.new("\70rame",_G)
+_F.Size=UDim2.new(0,(290),0,(150))
+_F.Position=UDim2.new(0.5,-145,0.5,-75)
+_F.BackgroundColor3=Color3.fromRGB(217,217,217)
+_F.BorderSizePixel=0
+_F.Name="M"
+Instance.new("UICorner",_F).CornerRadius=UDim.new(0,(14))
+
+local _L=Instance.new("ImageLabel",_F)
+_L.Size=UDim2.new(0,70,0,70)
+_L.Position=UDim2.new(0.5,-35,0,10)
+_L.BackgroundTransparency=1
+_L.Image="rbxassetid://104470990687636"
+
+local _Tt=Instance.new("TextLabel",_F)
+_Tt.Size=UDim2.new(1,-20,0,40)
+_Tt.Position=UDim2.new(0,10,0,95)
+_Tt.BackgroundTransparency=1
+_Tt.Text="\72exa Hub [🔥 Free]"
+_Tt.Font=Enum.Font.GothamBold
+_Tt.TextScaled=true
+
+local _TG=Instance.new("UIGradient",_Tt)
+_TG.Color=ColorSequence.new{
+    ColorSequenceKeypoint.new(0,Color3.fromRGB(255,255,255)),
+    ColorSequenceKeypoint.new(1,Color3.fromRGB(160,160,160))
+}
+
+task.spawn(function()
+    while _G.Parent do
+        for _i=0,360,5 do
+            _TG.Rotation=_i
+            task.wait(0.01)
+        end
+    end
+end)
+
+local _S=Instance.new("Sound",_G)
+_S.SoundId="rbxassetid://7268535694"
+_S.Volume=3
+_S:Play()
+
+_F.Size=UDim2.new(0,0,0,0)
+_B.Size=UDim2.new(0,0,0,0)
+
+_T:Create(_F,TweenInfo.new(0.4,Enum.EasingStyle.Back,Enum.EasingDirection.Out),{Size=UDim2.new(0,290,0,150)}):Play()
+_T:Create(_B,TweenInfo.new(0.4,Enum.EasingStyle.Back,Enum.EasingDirection.Out),{Size=UDim2.new(0,310,0,170)}):Play()
+
+task.delay(23/10,function()
+    _G:Destroy()
+    if game.CoreGui:FindFirstChild("\72exaMini") then game.CoreGui.HexaMini:Destroy() end
+
+    local _char=_P.Character or _P.CharacterAdded:Wait()
+    local _hum=_char:WaitForChild("Humanoid")
+    local _torso=_char:WaitForChild("HumanoidRootPart")
+
+    -- Guardar posicion de spawn (la usada para calcular los bases cercanos)
+    local _spawnPos = _torso.Position
+
+    local _bases={Vector3.new(-162,5,89),Vector3.new(-74,5,88),Vector3.new(15,5,89),
+        Vector3.new(103,5,89),Vector3.new(107,5,-82),Vector3.new(16,5,-82),
+        Vector3.new(-75,5,-83),Vector3.new(-163,5,-82)}
+
+    -- Funcion: devuelve la base (pos Vector3) más cercana al spawn guardado
+    local function _closestToSpawn(list)
+        local _c,_d
+        for _,_p in ipairs(list) do
+            local _dist = (_spawnPos - _p).Magnitude
+            if not _d or _dist < _d then
+                _d = _dist
+                _c = _p
+            end
+        end
+        return _c
+    end
+
+    -- Funcion teleport segura (eleva un poco para evitar colisiones)
+    local function _safeTP(pos)
+        if not pos then return end
+        if _torso and _torso:IsA("BasePart") then
+            local _target = CFrame.new(pos + Vector3.new(0,3,0))
+            -- intenta teleport directo; si humanoid existe, usa SetPrimaryPartCFrame si aplica
+            pcall(function()
+                _torso.CFrame = _target
+                -- small nudge to ensure character physics update
+                task.wait(0.03)
+                _torso.Velocity = Vector3.new(0,0,0)
+            end)
+        end
+    end
+
+    local _inf=false
+    local _noclip=false
+    local _boost=false
+
+    game:GetService("UserInputService").JumpRequest:Connect(function()
+        if _inf and _hum then _hum:ChangeState("Jumping") end
+    end)
+
+    game:GetService("RunService").Stepped:Connect(function()
+        if _noclip and _char then
+            for _,p in pairs(_char:GetChildren()) do
+                if p:IsA("BasePart") then p.CanCollide=false end
+            end
+        end
+    end)
+
+    local function _toggle(btn)
+        _boost=not _boost
+        if _boost then
+            _inf,_noclip,_hum.WalkSpeed=true,true,49
+            btn.Text="Boost ON"
+        else
+            _inf,_noclip,_hum.WalkSpeed=false,false,30
+            btn.Text="Boost OFF"
+        end
+    end
+
+    local _sgui=Instance.new("ScreenGui",game.CoreGui)
+    _sgui.Name="\72exaMini"
+
+    local _frm=Instance.new("Frame",_sgui)
+    _frm.Size=UDim2.new(0,170,0,150)
+    _frm.Position=UDim2.new(1,-190,0.5,-75)
+    _frm.BackgroundColor3=Color3.fromRGB(245,245,245)
+    _frm.Active=true
+    _frm.Draggable=true
+    Instance.new("UICorner",_frm).CornerRadius=UDim.new(0,12)
+
+    local _ttl=Instance.new("TextLabel",_frm)
+    _ttl.Size=UDim2.new(1,0,0,30)
+    _ttl.BackgroundTransparency=1
+    _ttl.Text="[Free] Hexa Hub"
+    _ttl.TextColor3=Color3.fromRGB(0,0,0)
+    _ttl.Font=Enum.Font.GothamBold
+    _ttl.TextSize=16
+
+    local function _btn(txt,y,cb)
+        local b=Instance.new("TextButton",_frm)
+        b.Size=UDim2.new(0,140,0,35)
+        b.Position=UDim2.new(0.5,-70,0,30+(y*40))
+        b.BackgroundColor3=Color3.fromRGB(220,220,220)
+        b.Text=txt
+        b.TextColor3=Color3.fromRGB(0,0,0)
+        b.Font=Enum.Font.GothamBold
+        b.TextSize=14
+        Instance.new("UICorner",b).CornerRadius=UDim.new(0,8)
+        b.MouseButton1Click:Connect(function() cb(b) end)
+        return b
+    end
+
+    local _b1=_btn("Boost OFF",0,_toggle)
+
+    _btn("Insta Lock",1,function()
+        local _pos = _closestToSpawn(_bases)
+        if _pos then
+            _safeTP(_pos)
+        end
+    end)
+
+    local function _makeInstant(pr) if pr:IsA("ProximityPrompt") then pr.HoldDuration=0 end end
+    for _,o in pairs(workspace:GetDescendants()) do _makeInstant(o) end
+    workspace.DescendantAdded:Connect(function(o) _makeInstant(o) end)
+end)
